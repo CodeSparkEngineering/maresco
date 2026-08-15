@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#0a0a0b"/>
+  <!-- Maresco: the sea above, the counter below. -->
+  <path d="M12 24c4-4 8-4 12 0s8 4 12 0 8-4 12 0" fill="none" stroke="#7f9a94" stroke-width="2" stroke-linecap="round"/>
+  <path d="M12 33c4-4 8-4 12 0s8 4 12 0 8-4 12 0" fill="none" stroke="#c8a96a" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
+  <ellipse cx="32" cy="47" rx="16" ry="6" fill="#f4f1ea" opacity="0.92"/>
+  <ellipse cx="32" cy="43.5" rx="16.5" ry="4" fill="#e07a52"/>
+</svg>

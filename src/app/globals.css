@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Base
+   ───────────────────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: auto; /* Lenis owns smooth scroll; native fallback stays instant */
+  }
+
+  body {
+    @apply bg-sand text-ink font-sans antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Reduced motion: neutralise long transitions/animations globally. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  ::selection {
+    background: theme("colors.gold.DEFAULT");
+    color: #fff;
+  }
+
+  /* Focus visibility for keyboard users. */
+  :focus-visible {
+    outline: 2px solid theme("colors.gold.DEFAULT");
+    outline-offset: 3px;
+  }
+
+  /* Slim, unobtrusive scrollbar — light theme. */
+  ::-webkit-scrollbar {
+    width: 9px;
+  }
+  ::-webkit-scrollbar-track {
+    background: theme("colors.sand.DEFAULT");
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #D4CDBF;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #B8B0A0;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Utilities
+   ───────────────────────────────────────────────────────────────────────── */
+@layer utilities {
+  /* Film grain overlay — a data-URI SVG noise field, blended softly. Adds a
+     photographic, cinematic tooth to placeholders and real imagery alike. */
+  .grain::before,
+  .grain {
+    content: "";
+  }
+  .grain {
+    pointer-events: none;
+    mix-blend-mode: soft-light;
+    opacity: 0.3;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  /* Tiny rice-grain speckle for the shari layer of the exploded nigiri. */
+  .rice-grain {
+    background-image: radial-gradient(
+        circle at 20% 30%,
+        rgba(255, 255, 255, 0.55) 0 1px,
+        transparent 1.5px
+      ),
+      radial-gradient(
+        circle at 65% 55%,
+        rgba(255, 255, 255, 0.4) 0 1px,
+        transparent 1.5px
+      ),
+      radial-gradient(
+        circle at 40% 75%,
+        rgba(120, 104, 74, 0.35) 0 1px,
+        transparent 1.5px
+      ),
+      radial-gradient(
+        circle at 82% 25%,
+        rgba(120, 104, 74, 0.3) 0 1px,
+        transparent 1.5px
+      );
+    background-size: 26px 26px, 30px 30px, 22px 22px, 34px 34px;
+  }
+
+  /* Gentle float used by the suspended nigiri layers. */
+  .nigiri-float {
+    animation: nigiri-bob 6s ease-in-out infinite;
+  }
+  @keyframes nigiri-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Custom cursor — hide the native cursor only when our cursor is active, and
+   only on devices where it was enabled (desktop, fine pointer). Form fields
+   keep their native caret for usability.
+   ───────────────────────────────────────────────────────────────────────── */
+.has-custom-cursor,
+.has-custom-cursor a,
+.has-custom-cursor button,
+.has-custom-cursor [data-cursor] {
+  cursor: none;
+}
+.has-custom-cursor input,
+.has-custom-cursor textarea,
+.has-custom-cursor select,
+.has-custom-cursor [type="date"] {
+  cursor: auto;
+}
