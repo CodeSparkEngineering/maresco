@@ -64,12 +64,31 @@ export default function SushiExperience() {
       mm.add("(prefers-reduced-motion: reduce)", () => {
         gsap.set(".art-label", { opacity: 1, y: 0 });
       });
-      mm.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () =>
+      // Desktop (≥1024px, where the floating labels live): pinned scroll-scrub
+      // explosion — the signature moment.
+      mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () =>
         build({ s: 1, end: "+=240%" })
       );
-      mm.add("(max-width: 767px) and (prefers-reduced-motion: no-preference)", () =>
-        build({ s: 0.66, end: "+=170%" })
-      );
+      // Mobile / tablet (<1024px): NO scroll-jacking pin. The nigiri stays
+      // assembled and simply reveals with a calm fade-up as it scrolls into
+      // view, and the ingredient legend staggers in — fluid, natural scroll.
+      mm.add("(max-width: 1023px) and (prefers-reduced-motion: no-preference)", () => {
+        gsap.from(".art-stage", {
+          opacity: 0,
+          y: 28,
+          duration: 0.9,
+          ease: "power2.out",
+          scrollTrigger: { trigger: ".art-pin", start: "top 72%", once: true },
+        });
+        gsap.from(".art-legend > li", {
+          opacity: 0,
+          y: 14,
+          duration: 0.55,
+          stagger: 0.07,
+          ease: "power2.out",
+          scrollTrigger: { trigger: ".art-legend", start: "top 88%", once: true },
+        });
+      });
 
       return () => mm.revert();
     },
@@ -88,7 +107,7 @@ export default function SushiExperience() {
 
   return (
     <section ref={scope} id="sushi" className="relative">
-      <div className="art-pin relative flex h-[100svh] min-h-[640px] w-full flex-col overflow-hidden bg-sand-warm/85">
+      <div className="art-pin relative flex w-full flex-col overflow-hidden bg-sand-warm/85 lg:h-[100svh] lg:min-h-[640px]">
         {/* ambient warm spotlight */}
         <div className="pointer-events-none absolute left-1/2 top-1/2 h-[90vmin] w-[90vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,#f5ead8_0%,#f0e4d0_45%,transparent_70%)] opacity-60" />
 
@@ -129,8 +148,8 @@ export default function SushiExperience() {
         </div>
 
         {/* stage */}
-        <div className="relative z-10 flex flex-1 items-center justify-center">
-          <div className="relative h-[320px] w-[360px] sm:h-[360px] sm:w-[440px]">
+        <div className="relative z-10 flex flex-1 items-center justify-center py-14 lg:py-0">
+          <div className="art-stage relative h-[320px] w-[360px] sm:h-[360px] sm:w-[440px]">
             {/* shadow */}
             <div className="layer-shadow absolute bottom-4 left-1/2 h-10 w-[78%] -translate-x-1/2 rounded-[100%] bg-black/80 blur-2xl" />
 
@@ -230,7 +249,7 @@ export default function SushiExperience() {
         {/* footer copy + mobile legend + plated dish photo */}
         <div className="relative z-20 px-6 pb-12 md:px-14 md:pb-16">
           {/* Mobile legend — replaces floating labels on small screens */}
-          <ul className="mb-6 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:hidden">
+          <ul className="art-legend mb-6 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:hidden">
             {art.steps.map((step) => (
               <li
                 key={step.id}
